@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+// grpc 可以理解为graphql schema
+
+package cats; // 包名
+
+import "common.proto";
+import "google/protobuf/empty.proto";
+
+service CatsService {
+  rpc FindOne (ById) returns (Cat) {} // 暴露方法
+  rpc FindMany (common.Pagination) returns (CatsData) {}
+  // 传入空参数
+  rpc FindSome (google.protobuf.Empty) returns (CatsData) {}
+}
+
+// message定义结构
+message ById { // 参数
+  // 对于设置最频繁的字段，您应该使用字段编号1到15。较低的字段编号值在线格式中占用的空间更少。例如，1到15范围内的字段编号需要一个字节进行编码。16到2047范围内的字段编号需要两个字节。
+  int32 id = 1;
+}
+
+message CatsData { // 返回Cats数组
+  repeated Cat cats = 1;
+}
+
+message Cat { // 返回类型
+  int32 id = 1;
+  string name = 2;
+}
+
